@@ -1,16 +1,23 @@
-import { Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ApiErrorResponse } from '../../interfaces/api-error';
+import { Auth } from '../../services/auth/auth';
 import { ButtonGreen } from '../../shared/components/button-green/button-green';
 import { CustomInput } from '../../shared/components/custom-input/custom-input';
+import { ErrorPopup } from '../../shared/components/error-popup/error-popup';
 
 @Component({
   selector: 'app-login',
-  imports: [CustomInput, ReactiveFormsModule, ButtonGreen],
+  imports: [CustomInput, ReactiveFormsModule, ButtonGreen, ErrorPopup],
   templateUrl: './login.html',
   styles: ``,
   standalone: true,
 })
 export class Login {
+  private authService = inject(Auth);
+
+  errorMessage: string | string[] | null = null;
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -18,7 +25,30 @@ export class Login {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Dados:', this.loginForm.value);
+      const { email, password } = this.loginForm.value;
+
+      if (email && password) {
+        this.authService.login({ email, password }).subscribe({
+          next: () => {
+            console.log('Logado com sucesso');
+          },
+          error: (err: HttpErrorResponse) => {
+            const backendError = err.error as ApiErrorResponse;
+
+            if (err.status === 0) {
+              this.errorMessage = 'Não foi possível conectar ao servidor.';
+            } else if (backendError && backendError.message) {
+              if (Array.isArray(backendError.message)) {
+                this.errorMessage = backendError.message.join(', ');
+              } else {
+                this.errorMessage = backendError.message;
+              }
+            } else {
+              this.errorMessage = 'Ocorreu um erro desconhecido.';
+            }
+          },
+        });
+      }
     }
   }
 
@@ -38,7 +68,7 @@ export class Login {
       return `A senha deve ter no mínimo ${requiredLength} caracteres`;
     }
 
-    return 'Campo inválido'; // Mensagem padrão (fallback)
+    return 'Campo inválido';
   }
 
   getControl(name: string): FormControl {

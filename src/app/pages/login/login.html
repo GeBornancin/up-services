@@ -1,6 +1,6 @@
 <div class="h-screen w-screen flex flex-col justify-center items-center">
   <header
-    class="hidden lg:w-full lg:h-1/10 lg:flex lg:justify-between lg:items-center lg: bg-primary"
+    class="hidden lg:w-full lg:h-1/10 lg:flex lg:justify-between lg:items-center lg: bg-primary absolute top-0 left-0 p-6"
   >
     <svg
       width="150"
@@ -28,7 +28,7 @@
   </header>
 
   <div
-    class="w-full h-full bg-primary lg:rounded-[25px] justify-center items-center lg:h-4/5 lg:w-2/7 lg:mx-auto lg:mt-20"
+    class="w-full h-full bg-primary lg:rounded-[25px] justify-center items-center lg:h-4/5 lg:w-2/7 lg:mx-auto lg:mt-15"
   >
     <form
       class="w-full h-[90%] justify-center items-center flex flex-col gap-3"
@@ -86,6 +86,12 @@
           >
         </div>
       </div>
+
+      <!-- <app-error-popup class="w-[80%]"></app-error-popup> -->
+      <!-- @if (errorMessage) {
+  <app-error-popup
+    (close)="errorMessage = null"> </app-error-popup>
+} -->
       <app-button-green
         class="w-[80%] mt-8"
         text="Entrar"

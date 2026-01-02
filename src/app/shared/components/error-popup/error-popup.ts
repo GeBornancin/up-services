@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-error-popup',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './error-popup.css',
 })
 export class ErrorPopup {
+  close = output<void>();
 
+  closePopup() {
+    this.close.emit();
+  }
 }
