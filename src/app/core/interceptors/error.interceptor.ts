@@ -10,7 +10,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
         console.warn('Sessão expirada ou inválida. A redirecionar...');
-        router.navigate(['/login']);
+        // Só redireciona se não estiver na página de login
+        if (!router.url.includes('/login')) {
+          router.navigate(['/login']);
+        }
       }
 
       return throwError(() => error);

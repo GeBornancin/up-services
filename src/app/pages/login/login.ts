@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiErrorResponse } from '../../interfaces/api-error';
 import { Auth } from '../../services/auth/auth';
@@ -16,8 +16,9 @@ import { ErrorPopup } from '../../shared/components/error-popup/error-popup';
 })
 export class Login {
   private authService = inject(Auth);
+  private cdr = inject(ChangeDetectorRef);
 
-  errorMessage: string | string[] | null = null;
+  errorMessage: string | null = null;
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -28,9 +29,10 @@ export class Login {
       const { email, password } = this.loginForm.value;
 
       if (email && password) {
+        this.errorMessage = null;
         this.authService.login({ email, password }).subscribe({
           next: () => {
-            console.log('Logado com sucesso');
+            // Redirecionamento é feito automaticamente no serviço
           },
           error: (err: HttpErrorResponse) => {
             const backendError = err.error as ApiErrorResponse;
@@ -46,6 +48,7 @@ export class Login {
             } else {
               this.errorMessage = 'Ocorreu um erro desconhecido.';
             }
+            this.cdr.detectChanges();
           },
         });
       }

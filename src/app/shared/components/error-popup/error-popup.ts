@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 
 @Component({
   selector: 'app-error-popup',
@@ -7,6 +7,8 @@ import { Component, output } from '@angular/core';
   styleUrl: './error-popup.css',
 })
 export class ErrorPopup {
+  @Input() text: string = '';
+
   close = output<void>();
 
   closePopup() {

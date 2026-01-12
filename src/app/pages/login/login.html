@@ -87,11 +87,10 @@
         </div>
       </div>
 
-      <!-- <app-error-popup class="w-[80%]"></app-error-popup> -->
-      <!-- @if (errorMessage) {
-  <app-error-popup
-    (close)="errorMessage = null"> </app-error-popup>
-} -->
+      @if (errorMessage) {
+      <app-error-popup class="w-[80%]" [text]="errorMessage" (close)="errorMessage = null">
+      </app-error-popup>
+      }
       <app-button-green
         class="w-[80%] mt-8"
         text="Entrar"
