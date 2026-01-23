@@ -12,9 +12,20 @@ export interface User {
   lastName: string;
 }
 
+export interface Address {
+  bairro: string;
+  cep: string;
+  cidade: string;
+  complemento?: string;
+  estado: string;
+  numero: string;
+  rua: string;
+}
+
 interface LoginResponse {
   access_token: string;
   user: User;
+  endereco: Address;
 }
 
 @Injectable({
@@ -24,6 +35,7 @@ export class Auth {
   private readonly API_URL = environment.apiUrl;
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'user_data';
+  private readonly ADDRESS_KEY = 'user_address';
 
   // Signal reativo para o usuário atual
   currentUser = signal<User | null>(this.getUserFromStorage());
@@ -39,9 +51,19 @@ export class Auth {
     );
   }
 
+  register(data: any) {
+    return this.http.post<LoginResponse>(`${this.API_URL}/auth/register`, data).pipe(
+      tap((response) => {
+        this.setSession(response);
+        this.redirectByRole(response.user.role);
+      })
+    );
+  }
+
   private setSession(authResult: LoginResponse): void {
     localStorage.setItem(this.TOKEN_KEY, authResult.access_token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
+    localStorage.setItem(this.ADDRESS_KEY, JSON.stringify(authResult.endereco));
     this.currentUser.set(authResult.user);
   }
 
@@ -49,6 +71,11 @@ export class Auth {
     const userData = localStorage.getItem(this.USER_KEY);
     return userData ? JSON.parse(userData) : null;
   }
+  
+  getUserAddress(): Address | null {
+  const addressData = localStorage.getItem(this.ADDRESS_KEY);
+  return addressData ? JSON.parse(addressData) : null;
+}
 
   private redirectByRole(role: User['role']): void {
     const routes: Record<User['role'], string> = {

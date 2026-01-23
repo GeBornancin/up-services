@@ -1,0 +1,220 @@
+<div class="min-h-screen w-screen flex flex-col justify-center items-center py-8">
+  <header
+    class="hidden lg:w-full lg:h-1/10 lg:flex lg:justify-between lg:items-center lg: bg-primary absolute top-0 left-0 p-6"
+  >
+    <img src="images/logo.png" alt="Logo" class="h-12" />
+  </header>
+
+  <div
+    class="w-full min-h-full bg-primary lg:rounded-[25px] justify-center items-center lg:min-h-fit lg:w-2/5 lg:mx-auto lg:mt-15 py-8"
+  >
+    <form
+      class="w-full h-full justify-center items-center flex flex-col gap-3 px-4"
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <img src="images/logo.png" alt="Logo" class="h-24 mb-4" />
+
+      <h1 class="text-white text-2xl font-bold mb-4">Criar Conta</h1>
+
+      <!-- Seletor de tipo de usuário -->
+      <div class="w-[80%] flex justify-center gap-4 mb-4">
+        <button
+          type="button"
+          (click)="setUserType('client')"
+          [class]="'px-6 py-3 rounded-lg font-bold transition-all ' + (userType === 'client' ? 'bg-green-link text-white' : 'bg-white text-primary hover:bg-gray-200')"
+        >
+          Sou Cliente
+        </button>
+        <button
+          type="button"
+          (click)="setUserType('nurse')"
+          [class]="'px-6 py-3 rounded-lg font-bold transition-all ' + (userType === 'nurse' ? 'bg-green-link text-white' : 'bg-white text-primary hover:bg-gray-200')"
+        >
+          Sou Enfermeiro(a)
+        </button>
+      </div>
+
+      <!-- Campos comuns -->
+      <div class="w-[80%] flex flex-col lg:flex-row gap-3">
+        <app-custom-input
+          class="w-full lg:w-1/2"
+          label="Nome"
+          type="text"
+          placeholder="Digite seu nome"
+          [control]="getControl('firstName')"
+          [errorMessage]="getErrorMessage('firstName')"
+        ></app-custom-input>
+
+        <app-custom-input
+          class="w-full lg:w-1/2"
+          label="Sobrenome"
+          type="text"
+          placeholder="Digite seu sobrenome"
+          [control]="getControl('lastName')"
+          [errorMessage]="getErrorMessage('lastName')"
+        ></app-custom-input>
+      </div>
+
+      <app-custom-input
+        class="w-[80%]"
+        label="E-mail"
+        type="email"
+        placeholder="Digite seu e-mail"
+        [control]="getControl('email')"
+        [errorMessage]="getErrorMessage('email')"
+      ></app-custom-input>
+
+      <app-custom-input
+        class="w-[80%]"
+        label="Senha"
+        type="password"
+        placeholder="Digite sua senha"
+        [control]="getControl('password')"
+        [errorMessage]="getErrorMessage('password')"
+      ></app-custom-input>
+
+      <app-custom-input
+        class="w-[80%]"
+        label="Confirmar Senha"
+        type="password"
+        placeholder="Confirme sua senha"
+        [control]="getControl('confirmPassword')"
+        [errorMessage]="getErrorMessage('confirmPassword')"
+      ></app-custom-input>
+
+      <!-- Campos específicos para Cliente -->
+      @if (userType === 'client') {
+      <div class="w-[80%] flex flex-col lg:flex-row gap-3">
+        <app-custom-input
+          class="w-full lg:w-1/2"
+          label="Telefone"
+          type="tel"
+          placeholder="+55 11 99999-9999"
+          [control]="getControl('phoneNumber')"
+          [errorMessage]="getErrorMessage('phoneNumber')"
+        ></app-custom-input>
+
+        <app-custom-input
+          class="w-full lg:w-1/2"
+          label="CEP"
+          type="text"
+          placeholder="12345-678"
+          [control]="getControl('cep')"
+          [errorMessage]="getErrorMessage('cep')"
+        ></app-custom-input>
+      </div>
+
+      <div class="w-[80%] flex flex-col lg:flex-row gap-3">
+        <app-custom-input
+          class="w-full lg:w-3/4"
+          label="Rua"
+          type="text"
+          placeholder="Nome da rua"
+          [control]="getControl('rua')"
+          [errorMessage]="getErrorMessage('rua')"
+        ></app-custom-input>
+
+        <app-custom-input
+          class="w-full lg:w-1/4"
+          label="Número"
+          type="text"
+          placeholder="123"
+          [control]="getControl('numero')"
+          [errorMessage]="getErrorMessage('numero')"
+        ></app-custom-input>
+      </div>
+
+      <div class="w-[80%] flex flex-col lg:flex-row gap-3">
+        <app-custom-input
+          class="w-full lg:w-1/2"
+          label="Bairro"
+          type="text"
+          placeholder="Nome do bairro"
+          [control]="getControl('bairro')"
+          [errorMessage]="getErrorMessage('bairro')"
+        ></app-custom-input>
+
+        <app-custom-input
+          class="w-full lg:w-1/2"
+          label="Complemento"
+          type="text"
+          placeholder="Apto, Bloco, etc."
+          [control]="getControl('complemento')"
+          [errorMessage]="getErrorMessage('complemento')"
+        ></app-custom-input>
+      </div>
+
+      <div class="w-[80%] flex flex-col lg:flex-row gap-3">
+        <app-custom-input
+          class="w-full lg:w-3/4"
+          label="Cidade"
+          type="text"
+          placeholder="Nome da cidade"
+          [control]="getControl('cidade')"
+          [errorMessage]="getErrorMessage('cidade')"
+        ></app-custom-input>
+
+        <app-custom-input
+          class="w-full lg:w-1/4"
+          label="Estado"
+          type="text"
+          placeholder="SP"
+          [control]="getControl('estado')"
+          [errorMessage]="getErrorMessage('estado')"
+        ></app-custom-input>
+      </div>
+      }
+
+      <!-- Campos específicos para Enfermeiro(a) -->
+      @if (userType === 'nurse') {
+      <app-custom-input
+        class="w-[80%]"
+        label="COREN"
+        type="text"
+        placeholder="Digite seu número COREN"
+        [control]="getControl('coren')"
+        [errorMessage]="getErrorMessage('coren')"
+      ></app-custom-input>
+
+      <div class="w-[80%]">
+        <label class="text-white font-normal text-[14px] mb-2 block">Especialidades</label>
+        <div class="flex flex-wrap gap-2">
+          @for (specialty of availableSpecialties; track specialty) {
+          <button
+            type="button"
+            (click)="toggleSpecialty(specialty)"
+            [class]="'px-3 py-2 rounded-lg text-sm transition-all ' + (selectedSpecialties.includes(specialty) ? 'bg-green-link text-white' : 'bg-white text-primary hover:bg-gray-200')"
+          >
+            {{ specialty }}
+          </button>
+          }
+        </div>
+        @if (selectedSpecialties.length === 0 && formSubmitted) {
+        <p class="text-red-400 text-sm mt-1">Selecione pelo menos uma especialidade</p>
+        }
+      </div>
+      }
+
+      @if (errorMessage) {
+      <app-error-popup class="w-[80%]" [text]="errorMessage" (close)="errorMessage = null">
+      </app-error-popup>
+      }
+
+      <app-button-green
+        class="w-[80%] mt-4"
+        text="Cadastrar"
+        [disabled]="registerForm.invalid"
+      ></app-button-green>
+
+      <div class="mb-4">
+        <span class="text-white font-normal text-[14px]">Já tem uma conta?</span>
+        <a routerLink="/login" class="text-green-link font-normal text-[14px] hover:underline cursor-pointer">
+          Entrar</a
+        >
+      </div>
+    </form>
+  </div>
+
+  <p class="hidden lg:flex lg:font-normal lg:text-[14px] lg:mt-2">Up Plantões & Serviços 2026</p>
+</div>

@@ -1,0 +1,47 @@
+.scroll-container {
+  position: relative;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #e5e7eb;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+.scroll-item {
+  /* Mostra 3 itens completos + metade do 4º */
+  /* Cálculo: (100% - gaps entre itens) / 3.5 */
+  width: calc((100% - 4.5rem) / 3.5);
+  min-width: 280px;
+}
+
+/* Para telas menores, mostra apenas 1 item por vez */
+@media (max-width: 768px) {
+  .scroll-item {
+    width: calc(100% - 2rem);
+    min-width: 280px;
+  }
+}
+
+/* Para telas médias, mostra 2 itens + metade do 3º */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .scroll-item {
+    width: calc((100% - 3rem) / 2.5);
+    min-width: 280px;
+  }
+}

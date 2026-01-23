@@ -5,43 +5,163 @@
 </div>
 } @if(!isLoadingPage) {
 <main class="w-full h-full flex flex-col items-center">
-  <section class="pt-10">
+  <section class="pt-10 flex flex-col items-center">
     <h1 class="text-[24px] text-center mb-10 font-bold">Seu painel</h1>
+    <app-button-green class="w-[50%] lg:w-1/4 mb-10" text="Solicitar Serviço" (click)="solicitarServico()"></app-button-green>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 [&_img]:h-25 [&_img]:w-25">
-      <div
-        class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center"
-      >
+      <div class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center">
         <h1>Serviços ativos</h1>
         <div class="flex justify-between">
-          <h1 class="text-[75px]">{{ activeServiceCount }}</h1>
+          <h1 class="text-[75px]">{{ activeServices.length }}</h1>
           <img src="icons/white-calendary-icon.svg" alt="" />
         </div>
       </div>
-      <div
-        class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center"
-      >
+      <div class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center">
         <h1>Pendentes</h1>
         <div class="flex justify-between">
-          <h1 class="text-[75px]">13</h1>
+          <h1 class="text-[75px]">{{pendingServiceCount}}</h1>
           <img src="icons/white-alert-icon.svg" alt="" />
         </div>
       </div>
-      <div
-        class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center"
-      >
+      <div class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center">
         <h1>Em andamento</h1>
         <div class="flex justify-between">
-          <h1 class="text-[75px]">13</h1>
+          <h1 class="text-[75px]">{{inProgressServiceCount}}</h1>
           <img src="icons/white-clock-icon.svg" alt="" />
         </div>
       </div>
-      <div
-        class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center"
-      >
+      <div class="w-80 lg:w-60 xl:w-80 h-40 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center">
         <h1>Concluídos</h1>
         <div class="flex justify-between">
-          <h1 class="text-[75px]">13</h1>
+          <h1 class="text-[75px]">{{completedServiceCount}}</h1>
           <img src="icons/white-success-icon.svg" alt="" />
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="pt-10 w-full flex flex-col items-center mb-10">
+    <h1 class="text-[24px] text-center mb-10 font-bold">Gerenciar meus serviços</h1>
+    <div class=" bg-gray-300 rounded-2xl w-[95] lg:w-1/4 h-11 font-bold flex justify-between items-center gap-5 ">
+      <a (click)="setActiveTab('active')"
+        [class]="'cursor-pointer flex items-center justify-center rounded-2xl m-0.5 w-1/3  h-10 px-4 ' + (activeTab === 'active' ? 'bg-white' : 'hover:bg-gray-200')">Ativos</a>
+      <a (click)="setActiveTab('completed')"
+        [class]="'cursor-pointer flex items-center justify-center rounded-2xl m-0.5 w-1/3   h-10 px-4 ' + (activeTab === 'completed' ? 'bg-white' : 'hover:bg-gray-200')">Concluidos</a>
+      <a (click)="setActiveTab('all')"
+        [class]="'cursor-pointer flex items-center justify-center rounded-2xl m-0.5 w-1/3  h-10 px-4 ' + (activeTab === 'all' ? 'bg-white' : 'hover:bg-gray-200')">Todos</a>
+    </div>
+
+    <!-- Scroll Container -->
+    <div class="mt-6 w-full px-4 lg:px-10">
+      <div class="scroll-container overflow-x-auto">
+        <div class="flex gap-6 pb-4">
+          @if(activeTab === 'active') {
+          @for(service of activeServices; track service.id) {
+          <div
+            class="scroll-item bg-primary text-white rounded-lg p-4 shadow flex-shrink-0 h-60 flex flex-col items-center gap-2">
+            @if(service.provider) {
+            <img class="rounded-[100%] h-11 w-11" src="icons/user-circle-white-icon.svg" alt="Userphoto" />
+            <h1 class="text-[24px] text-center font-bold">{{service.provider.nome}}</h1>
+            }@else {
+            <img class="rounded-[100%] h-11 w-11" src="icons/white-alert-icon.svg" alt="Pendente">
+            <h1 class="text-[24px] text-center font-bold">Pendente</h1>
+
+            }
+            <div class="flex w-full items-center justify-between px-10">
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <img class="w-6" src="icons/white-calendary-icon.svg" alt="">
+                <p>{{serviceDate}}</p>
+              </div>
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <img class="w-6" src="icons/white-clock-icon.svg" alt="">
+                <p>{{serviceTime}}</p>
+              </div>
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <p>R$</p>
+                <p>{{ service.precoPropostoPorCliente | number:'1.2-2' }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <img src="icons/white-localization-icon.svg" alt="">
+              <p> {{ address?.rua }}, {{ address?.cidade }} - {{ address?.numero }}</p>
+            </div>
+          </div>
+          } @empty {
+          <p class="text-gray-500 text-center w-full py-10">Nenhum serviço ativo</p>
+          }
+          }
+
+          @if(activeTab === 'completed') {
+          @for(service of completedServices; track service.id) {
+          <div
+            class="scroll-item bg-primary text-white rounded-lg p-4 shadow flex-shrink-0 h-60 flex flex-col items-center gap-2">
+            @if(service.provider) {
+            <img class="rounded-[100%] h-11 w-11" src="icons/user-circle-white-icon.svg" alt="Userphoto" />
+            <h1 class="text-[24px] text-center font-bold">{{service.provider.nome}}</h1>
+            }@else {
+            <img class="rounded-[100%] h-11 w-11" src="icons/white-alert-icon.svg" alt="Pendente">
+            <h1 class="text-[24px] text-center font-bold">Pendente</h1>
+
+            }
+            <div class="flex w-full items-center justify-between px-10">
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <img class="w-6" src="icons/white-calendary-icon.svg" alt="">
+                <p>{{serviceDate}}</p>
+              </div>
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <img class="w-6" src="icons/white-clock-icon.svg" alt="">
+                <p>{{serviceTime}}</p>
+              </div>
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <p>R$</p>
+                <p>{{ service.precoPropostoPorCliente | number:'1.2-2' }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <img src="icons/white-localization-icon.svg" alt="">
+              <p> {{ address?.rua }}, {{ address?.cidade }} - {{ address?.numero }}</p>
+            </div>
+          </div>
+          } @empty {
+          <p class="text-gray-500 text-center w-full py-10">Nenhum serviço concluído</p>
+          }
+          }
+
+          @if(activeTab === 'all') {
+          @for(service of allServices; track service.id) {
+          <div
+            class="slider-item bg-primary text-white rounded-lg p-4 shadow flex-shrink-0 h-60 flex flex-col items-center gap-2">
+            @if(service.provider) {
+            <img class="rounded-[100%] h-11 w-11" src="icons/user-circle-white-icon.svg" alt="Userphoto" />
+            <h1 class="text-[24px] text-center font-bold">{{service.provider.nome}}</h1>
+            }@else {
+            <img class="rounded-[100%] h-11 w-11" src="icons/white-alert-icon.svg" alt="Pendente">
+            <h1 class="text-[24px] text-center font-bold">Pendente</h1>
+
+            }
+            <div class="flex w-full items-center justify-between px-10">
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <img class="w-6" src="icons/white-calendary-icon.svg" alt="">
+                <p>{{serviceDate}}</p>
+              </div>
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <img class="w-6" src="icons/white-clock-icon.svg" alt="">
+                <p>{{serviceTime}}</p>
+              </div>
+              <div class="flex flex-col items-center gap-4 w-1/3">
+                <p>R$</p>
+                <p>{{ service.precoPropostoPorCliente | number:'1.2-2' }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <img src="icons/white-localization-icon.svg" alt="">
+              <p> {{ address?.rua }}, {{ address?.cidade }} - {{ address?.numero }}</p>
+            </div>
+          </div>
+          } @empty {
+          <p class="text-gray-500 text-center w-full py-10">Nenhum serviço encontrado</p>
+          }
+          }
         </div>
       </div>
     </div>

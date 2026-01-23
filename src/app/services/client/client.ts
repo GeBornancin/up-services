@@ -4,12 +4,22 @@ import { environment } from '../../../environments/environment';
 
 export interface Service {
   id: string;
-  title: string;
-  description: string;
-  basePrice: number;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  status: string;
+  descricao?: string;
+  precoPropostoPorCliente: number;
+  precoFinalAcordado?: number;
+  dataDesejada?: Date;
+  provider?: {
+    baseRate?: number;
+    descricao?: string;
+    email: string;
+    id: string;
+    nome: string;
+    telefone?: string;
+  };
+  criadoEm: Date;
+  paid: boolean;
+  pagoEm?: Date;
 }
 
 @Injectable({
@@ -17,9 +27,9 @@ export interface Service {
 })
 export class Client {
   private readonly API_URL = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getActiveServices() {
-    return this.http.get<Service[]>(`${this.API_URL}/services/active`);
+  getClientServices() {
+    return this.http.get<Service[]>(`${this.API_URL}/service-requests`);
   }
 }
