@@ -1,0 +1,107 @@
+<div class="z-10 bg-gray-900 opacity-80 fixed inset-0" (click)="closeModal.emit()"></div>
+<div class="z-20 w-full h-full flex justify-center items-center fixed inset-0 pointer-events-none">
+    <div class="pointer-events-auto flex flex-col bg-primary fixed w-[95%] lg:w-[50%] h-[90%] rounded-2xl p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-white">Solicitar Serviço</h2>
+            <button (click)="closeModal.emit()" class="text-white hover:text-gray-200 cursor-pointer">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        @if(errorMessage) {
+            <div class="mb-4">
+                <app-error-popup [text]="errorMessage" (close)="clearError()"></app-error-popup>
+            </div>
+        }
+
+        @if(isLoadingServices) {
+            <div class="flex justify-center items-center flex-1">
+                <div class="text-white text-lg">Carregando serviços...</div>
+            </div>
+        } @else {
+            <form [formGroup]="serviceRequestForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+                
+                <!-- Service Type -->
+                <div class="flex flex-col">
+                    <label class="text-white text-sm mb-2 block w-full">Tipo de Serviço *</label>
+                    <select 
+                        formControlName="serviceId"
+                        (change)="onServiceChange($event)"
+                        class="w-full h-10 p-2 rounded-md bg-white border border-gray-700 focus:border-green-500 focus:border-3 outline-none font-extralight text-sm text-gray-500"
+                        [class.border-red-500]="serviceRequestForm.get('serviceId')?.invalid && serviceRequestForm.get('serviceId')?.touched"
+                    >
+                        <option value="">Selecione um serviço</option>
+                        @for(service of availableServices; track service.id) {
+                            <option [value]="service.id">{{ service.titulo }} - R$ {{ service.precoBase | number:'1.2-2' }}</option>
+                        }
+                    </select>
+                    @if(serviceRequestForm.get('serviceId')?.invalid && serviceRequestForm.get('serviceId')?.touched) {
+                        <div class="text-red-500 text-xs mt-1 font-semibold">Selecione um tipo de serviço</div>
+                    }
+                </div>
+
+                <!-- Proposed Price -->
+                <app-custom-input
+                    label="Preço Proposto (R$) *"
+                    type="number"
+                    [placeholder]="selectedService ? 'Mínimo: R$ ' + minPrice : 'Selecione um serviço primeiro'"
+                    [control]="proposedPriceControl"
+                    [errorMessage]="proposedPriceControl.hasError('required') ? 'Preço proposto é obrigatório' : 
+                                   proposedPriceControl.hasError('min') ? 'Preço mínimo: R$ ' + minPrice + ',00' : 
+                                   proposedPriceControl.hasError('max') ? 'Preço máximo: R$ 10.000,00' : ''"
+                ></app-custom-input>
+
+                <!-- Description -->
+                <app-custom-input
+                    label="Descrição"
+                    type="text"
+                    placeholder="Descreva detalhadamente o serviço que você precisa"
+                    [control]="descriptionControl"
+                    [errorMessage]="'Descrição muito longa (máximo 1000 caracteres)'"
+                ></app-custom-input>
+
+                <!-- Notes -->
+                <app-custom-input
+                    label="Notas Adicionais"
+                    type="text"
+                    placeholder="Adicione observações como preferências de horário, instruções especiais, etc."
+                    [control]="notesControl"
+                    [errorMessage]="'Notas muito longas (máximo 500 caracteres)'"
+                ></app-custom-input>
+
+                <!-- Desired Date -->
+                <app-custom-input
+                    label="Data/Hora Desejada"
+                    type="datetime-local"
+                    placeholder=""
+                    [control]="desiredDateControl"
+                    errorMessage=""
+                ></app-custom-input>
+
+                <!-- Submit Button -->
+                <div class="flex gap-4 mt-6">
+                    <button 
+                        type="button"
+                        (click)="closeModal.emit()"
+                        class="flex-1 bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-400 transition cursor-pointer"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        type="submit"
+                        [disabled]="serviceRequestForm.invalid || isSubmitting"
+                        class="flex-1 bg-white text-primary font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                        @if(isSubmitting) {
+                            <span>Enviando...</span>
+                        } @else {
+                            <span>Solicitar Serviço</span>
+                        }
+                    </button>
+                </div>
+            </form>
+        }
+    </div>
+</div>

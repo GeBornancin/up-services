@@ -37,7 +37,17 @@ export class NurseDashboard implements OnInit {
 
   acceptService(serviceId: string) {
     console.log('Aceitando serviço:', serviceId);
-    // TODO: Implementar lógica para aceitar serviço
+    this.nurseService.acceptService(serviceId).subscribe({
+      next: (response) => {
+        console.log('Serviço aceito com sucesso:', response);
+        // Atualiza as listas de serviços após aceitar
+        this.getNurseServices();
+        this.getAvailableServices();
+      },
+      error: (error) => {
+        console.error('Erro ao aceitar serviço:', error);
+      }
+    });
   }
 
 

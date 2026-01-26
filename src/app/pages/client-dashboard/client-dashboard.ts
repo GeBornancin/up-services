@@ -5,10 +5,11 @@ import { Header } from '../../shared/components/header/header';
 import { Address, Auth } from '../../services/auth/auth';
 import { DecimalPipe } from '@angular/common';
 import { ButtonGreen } from '../../shared/components/button-green/button-green';
+import { ServiceRequestModal } from "./components/service-request-modal/service-request-modal";
 
 @Component({
   selector: 'app-client-dashboard',
-  imports: [Header, DecimalPipe, ButtonGreen],
+  imports: [Header, DecimalPipe, ButtonGreen, ServiceRequestModal],
   templateUrl: './client-dashboard.html',
   styleUrl: './client-dashboard.css',
 })
@@ -27,6 +28,8 @@ export class ClientDashboard implements OnInit {
   serviceDate: string = '';
   serviceTime: string = '';
   dataDesejada: string = new Date().toISOString();
+
+  requestServiceModalOpen: boolean = false;
 
   address: Address | null = null;
 
@@ -74,6 +77,6 @@ export class ClientDashboard implements OnInit {
   }
 
   solicitarServico() {
-    // Lógica para solicitar um novo serviço
+    this.requestServiceModalOpen = true;
   }
 }

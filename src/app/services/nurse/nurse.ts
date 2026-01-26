@@ -53,4 +53,10 @@ export class Nurse {
   getAvailableServices() {
     return this.http.get<NurseService[]>(`${this.API_URL}/service-requests/available`);
   }
+
+  acceptService(serviceId: string) {
+    return this.http.patch(`${this.API_URL}/service-requests/${serviceId}/accept`, {
+      status: 'accepted'
+    });
+  }
 }

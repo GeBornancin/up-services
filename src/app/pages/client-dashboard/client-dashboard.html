@@ -168,3 +168,6 @@
   </section>
 </main>
 }
+@if(requestServiceModalOpen) {
+  <app-service-request-modal (closeModal)="requestServiceModalOpen = false"></app-service-request-modal>
+}
