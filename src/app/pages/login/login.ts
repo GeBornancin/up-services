@@ -6,6 +6,7 @@ import { Auth } from '../../services/auth/auth';
 import { ButtonGreen } from '../../shared/components/button-green/button-green';
 import { CustomInput } from '../../shared/components/custom-input/custom-input';
 import { ErrorPopup } from '../../shared/components/error-popup/error-popup';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -77,4 +78,12 @@ export class Login {
   getControl(name: string): FormControl {
     return this.loginForm.get(name) as FormControl;
   }
+
+
+  private router = inject(Router);
+
+  navigateToRegister() {
+    this.router.navigate(['/register']);
+  }
+
 }

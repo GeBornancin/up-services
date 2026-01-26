@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -16,4 +16,10 @@ export class CustomInput {
   @Input() errorMessage: string = 'Teste';
 
   @Input() control!: FormControl;
+
+  @Output() inputChange = new EventEmitter<Event>();
+
+  onInput(event: Event) {
+    this.inputChange.emit(event);
+  }
 }

@@ -6,6 +6,7 @@
     [formControl]="control"
     [class.border-red-500]="control.invalid && (control.dirty || control.touched)"
     class="w-full h-10 p-3 rounded-md bg-white border border-gray-700 focus:border-green-500 focus:border-3 outline-none font-extralight text-sm text-gray-500"
+    (input)="onInput($event)"
   />
   @if(control.invalid && (control.dirty || control.touched)){
   <div class="text-red-500 text-xs mt-1 h-0.5 font-semibold">
