@@ -1,0 +1,29 @@
+<app-header></app-header>
+<main class="w-full h-full items-center justify-center flex flex-col">
+    <p class="w-1/2 text-[50px] font-bold mt-10 text-center leading-none text-gray-800">Bem-vindo ao painel administrativos.</p>
+
+    <section class="w-full h-full  flex flex-col items-center gap-6">
+        <div class="flex mt-5 items-center gap-4">
+            <img class="h-6 w-6" src="icons/black-clock-icon.svg" alt="">
+            <h1 class="text-[30px]  text-gray-600 font-semibold text-bg-primary ">Profissionais pendentes de
+                aprovação</h1>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 [&_img]:h-25 [&_img]:w-25">
+            @for(provider of providersToApprove; track provider.id) {
+            <div
+                class="w-80 lg:w-60 xl:w-80 h-70 flex-1 bg-primary rounded-2xl text-white p-5 justify-center items-center">
+                <h1 class="text-[25px] text-center font-bold ">{{provider.firstName}} {{provider.lastName}}</h1>
+                <h1 class="mt-5 text-[20px] text-center text-gray-300">{{provider.specialties}}</h1>
+                <h1 class="text-[20px] text-center text-gray-300">{{provider.email}}</h1>
+                <h1 class="text-[20px] text-center text-gray-300">{{provider.phone}}</h1>
+                <div class="w-full gap-2 mt-5 flex">
+                    <button (click)="rejectProvider(provider.id)"
+                        class="py-3 w-1/2 bg-red-800 rounded-2xl font-bold hover:bg-red-400 hover:cursor-pointer">Rejeitar</button>
+                    <button (click)="approveProvider(provider.id)"
+                        class="py-3 w-1/2 bg-button-green rounded-2xl font-bold hover:cursor-pointer">Aceitar</button>
+                </div>
+            </div>
+            }
+        </div>
+    </section>
+</main>

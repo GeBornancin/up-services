@@ -33,6 +33,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'admin',
+    canActivate: [authGuard, roleGuard(['admin'])],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboard),
+      },
+    ],
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'login',

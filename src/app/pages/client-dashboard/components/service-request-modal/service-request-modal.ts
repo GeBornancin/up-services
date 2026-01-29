@@ -1,14 +1,13 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Client, ServiceType } from '../../../../services/client/client';
-import { ButtonGreen } from '../../../../shared/components/button-green/button-green';
 import { CustomInput } from '../../../../shared/components/custom-input/custom-input';
 import { ErrorPopup } from '../../../../shared/components/error-popup/error-popup';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-service-request-modal',
-  imports: [ReactiveFormsModule, ButtonGreen, CustomInput, ErrorPopup, DecimalPipe],
+  imports: [ReactiveFormsModule, CustomInput, ErrorPopup, DecimalPipe],
   templateUrl: './service-request-modal.html',
   styleUrl: './service-request-modal.css',
 })

@@ -25,10 +25,12 @@
       </defs>
     </svg>
   </div>
-  <div class="flex gap-5 font-normal text-white">
-    <a class="">Home</a>
-    <a class="">Mensagens</a>
-  </div>
+  @if (user()?.role !== 'admin') {
+    <div class="flex gap-5 font-normal text-white">
+      <a class="">Home</a>
+      <a class="">Mensagens</a>
+    </div>
+  }
   <div class="flex items-center gap-3 text-white">
     <app-button-green
       class=""
