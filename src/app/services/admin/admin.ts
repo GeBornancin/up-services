@@ -27,6 +27,43 @@ export interface providerApprovalResponse {
   providers: Nurse[];
 }
 
+export interface Transaction {
+  id: string;
+  valor: number;
+  status: 'pending' | 'approved' | 'rejected' | 'refunded';
+  taxaPlataforma: number;
+  valorLiquido: number;
+  linkPagamento: string;
+  criadoEm: string;
+}
+
+export interface TransactionDetails extends Transaction {
+  idPagamento?: string;
+  idReembolso?: string;
+  reembolsadoEm?: Date;
+  motivoReembolso?: string;
+  historicoStatus?: any[];
+  retidoAte?: Date;
+  liberado?: boolean;
+  liberadoEm?: Date;
+  serviceRequestId?: string;
+  serviceRequest?: {
+    id: string;
+    status: string;
+    descricao?: string;
+  };
+  provider?: {
+    id: string;
+    nome: string;
+    email: string;
+  };
+  client?: {
+    id: string;
+    nome: string;
+    email: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -36,7 +73,7 @@ export class Admin {
   constructor(private http: HttpClient) { }
 
   getProvidersToApprove() {
-    return this.http.get<providerApprovalResponse>(`${this.API_URL}/admin/providers?verified=false&providerType=nurse`);
+    return this.http.get<providerApprovalResponse>(`${this.API_URL}/admin/providers?verified=null&providerType=nurse`);
   }
 
   approveProvider(id: string) {
@@ -45,5 +82,17 @@ export class Admin {
 
   rejectProvider(id: string) {
     return this.http.patch(`${this.API_URL}/admin/providers/${id}/reject`, {});
+  }
+
+  getAllTransactions() {
+    return this.http.get<Transaction[]>(`${this.API_URL}/admin/transactions`);
+  }
+
+  getTransactionDetails(transactionId: string) {
+    return this.http.get<TransactionDetails>(`${this.API_URL}/admin/transactions/${transactionId}`);
+  }
+
+  createService(data: { title: string; description: string; basePrice: number; isActive: boolean; }) {
+    return this.http.post(`${this.API_URL}/services`, data);
   }
 }

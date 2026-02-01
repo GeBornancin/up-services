@@ -1,18 +1,20 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Client, ServiceType } from '../../../../services/client/client';
+import { Client} from '../../../../services/client/client';
 import { CustomInput } from '../../../../shared/components/custom-input/custom-input';
 import { ErrorPopup } from '../../../../shared/components/error-popup/error-popup';
-import { DecimalPipe } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { Services, ServiceType } from '../../../../services/services/services';
 
 @Component({
   selector: 'app-service-request-modal',
-  imports: [ReactiveFormsModule, CustomInput, ErrorPopup, DecimalPipe],
+  imports: [CommonModule, ReactiveFormsModule, CustomInput, ErrorPopup, DecimalPipe],
   templateUrl: './service-request-modal.html',
   styleUrl: './service-request-modal.css',
 })
 export class ServiceRequestModal implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
+  private cdr = inject(ChangeDetectorRef);
 
   serviceRequestForm: FormGroup;
   isSubmitting = false;
@@ -23,7 +25,7 @@ export class ServiceRequestModal implements OnInit {
   selectedService: ServiceType | null = null;
   minPrice = 10;
 
-  constructor(private fb: FormBuilder, private clientService: Client) {
+  constructor(private fb: FormBuilder, private clientService: Client, private serviceService: Services) {
     this.serviceRequestForm = this.fb.group({
       serviceId: ['', [Validators.required]],
       proposed_price: [null, [Validators.required, Validators.min(10), Validators.max(10000)]],
@@ -41,15 +43,20 @@ export class ServiceRequestModal implements OnInit {
     this.isLoadingServices = true;
     this.errorMessage = '';
 
-    this.clientService.getActiveServices().subscribe({
+    this.serviceService.getActiveServices().subscribe({
       next: (services) => {
+
         this.availableServices = services;
         this.isLoadingServices = false;
+        this.cdr.detectChanges();
+
       },
       error: (err) => {
         console.error('Erro ao carregar serviços:', err);
         this.errorMessage = 'Erro ao carregar serviços disponíveis';
         this.isLoadingServices = false;
+        this.cdr.detectChanges();
+
       },
     });
   }
@@ -57,9 +64,9 @@ export class ServiceRequestModal implements OnInit {
   onServiceChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const serviceId = selectElement.value;
-    
+
     this.selectedService = this.availableServices.find(s => s.id === serviceId) || null;
-    
+
     if (this.selectedService) {
       this.minPrice = this.selectedService.precoBase;
       this.serviceRequestForm.get('proposed_price')?.setValidators([

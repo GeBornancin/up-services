@@ -58,7 +58,7 @@
           @if(activeTab === 'active') {
           @for(service of activeServices; track service.id) {
           <div
-            class="scroll-item bg-primary text-white rounded-lg p-4 shadow flex-shrink-0 h-60 flex flex-col items-center gap-2">
+            class="scroll-item bg-primary text-white rounded-lg p-4 shadow shrink-0 h-60 flex flex-col items-center gap-2">
             @if(service.provider) {
             <img class="rounded-[100%] h-11 w-11" src="icons/user-circle-white-icon.svg" alt="Userphoto" />
             <h1 class="text-[24px] text-center font-bold">{{service.provider.nome}}</h1>
@@ -94,7 +94,7 @@
           @if(activeTab === 'completed') {
           @for(service of completedServices; track service.id) {
           <div
-            class="scroll-item bg-primary text-white rounded-lg p-4 shadow flex-shrink-0 h-60 flex flex-col items-center gap-2">
+            class="scroll-item bg-primary text-white rounded-lg p-4 shadow shrink-0 h-60 flex flex-col items-center gap-2">
             @if(service.provider) {
             <img class="rounded-[100%] h-11 w-11" src="icons/user-circle-white-icon.svg" alt="Userphoto" />
             <h1 class="text-[24px] text-center font-bold">{{service.provider.nome}}</h1>
@@ -130,7 +130,7 @@
           @if(activeTab === 'all') {
           @for(service of allServices; track service.id) {
           <div
-            class="slider-item bg-primary text-white rounded-lg p-4 shadow flex-shrink-0 h-60 flex flex-col items-center gap-2">
+            class="slider-item bg-primary text-white rounded-lg p-4 shadow shrink-0 h-60 flex flex-col items-center gap-2">
             @if(service.provider) {
             <img class="rounded-[100%] h-11 w-11" src="icons/user-circle-white-icon.svg" alt="Userphoto" />
             <h1 class="text-[24px] text-center font-bold">{{service.provider.nome}}</h1>

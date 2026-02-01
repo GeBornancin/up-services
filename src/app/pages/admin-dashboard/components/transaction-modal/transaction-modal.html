@@ -1,0 +1,60 @@
+<div class="fixed top-0 left-0 bg-gray-600 opacity-50 w-full h-full z-10"></div>
+<div class="z-20 fixed top-0 left-0 w-full h-full flex justify-center items-center px-4">
+    <div class="flex w-[98%] h-[70%] lg:w-[60%] lg:h-[90%] rounded-3xl bg-gray-700">
+        <!-- FAZER UM BOTÃO DE FECHAR É PRO BOTÃO FICAR DENTRO DO MODAL NA PARTE CINZA NO CANTO SUPERIOR DIREITO -->
+        <div class="w-full h-full p-6 flex flex-col">
+            <div class="w-full flex justify-end">
+                <button (click)="closeModal.emit()">
+                    <img class="w-6 hover:cursor-pointer" src="icons/red-close-icon.png" alt="Fechar Modal">
+                </button>
+            </div>
+            <h1 class=" text-white text-[24px] font-bold mb-6 flex  items-center justify-center">Detalhes da Transação
+            </h1>
+            <div class="flex overflow-y-auto text-white gap-5">
+                <!--  -->
+                @if(transactionDetails) {
+                <div class="flex flex-col gap-4 items-center justify-center ">
+                    <div class="flex flex-col items-center justify-center">
+                        <p class="font-bold">ID da Transação:</p>
+                        <p>{{transactionDetails.id}}</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <p class="font-bold">Valor Bruto:</p>
+                        <p>R$ {{transactionDetails.valor | number:'1.2-2'}}</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <p class="font-bold">Valor Líquido:</p>
+                        <p>R$ {{transactionDetails.valorLiquido | number:'1.2-2'}}</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <p class="font-bold">Taxa da plataforma:</p>
+                        <p>R$ {{transactionDetails.taxaPlataforma | number:'1.2-2'}}</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <p class="font-bold">Criado Em:</p>
+                        <p>{{transactionDetails.criadoEm | date:'short'}}</p>
+                    </div>
+
+                </div>
+                <div class="flex flex-col gap-4 items-center justify-center">
+                    <div class="flex flex-col items-center justify-center">
+
+                        <p class="font-bold">Descrição do serviço:</p>
+                        <p>{{transactionDetails.serviceRequest?.descricao}}</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+
+                        <p class="font-bold">Status:</p>
+                        <p>{{transactionDetails.status}}</p>
+                    </div>
+
+                </div>
+                } @else {
+                <p>Carregando detalhes da transação...</p>
+                }
+            </div>
+            <div class="flex flex-col ">
+
+            </div>
+        </div>
+    </div>
