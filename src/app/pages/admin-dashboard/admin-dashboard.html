@@ -43,7 +43,44 @@
             <h1 class="text-[16px] md:text-[30px]  text-gray-600 font-semibold text-bg-primary ">Serviços</h1>
             <app-button-green [text]="'Adicionar Serviço'" (click)="createServiceModalOpen = true"></app-button-green>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 [&_img]:h-25 [&_img]:w-25">
+        <div class="mt-6 w-full px-4 lg:px-10">
+            <div class="scroll-container overflow-x-auto">
+                <div class="flex gap-6 pb-4">
+                    @if(allServices.length == 0) {
+                    <h1 class="text-[20px] text-gray-500 col-span-full text-center">Nenhum serviço cadastrado.</h1>
+                    }@else{
+                    @for(service of allServices; track service.id) {
+                    <div
+                        class="group bg-gray-800 text-white rounded-lg p-4 shadow shrink-0 w-70 min-h-100 flex flex-col justify-between items-center gap-6 relative overflow-hidden">
+
+                        <h2 class="text-[20px] font-bold text-center">{{service.titulo}}</h2>
+                        <div class="flex flex-col gap-6 flex-1 w-full">
+                            <div class="flex flex-col justify-start text-center items-center">
+                                <p class="font-black">Descrição</p>
+                                <p class="text-[16px] text-center font-medium h-20 overflow-y-auto w-full">{{service.descricao}}</p>
+                            </div>
+                            <div class="flex flex-col justify-center text-center items-center">
+                                <p class="font-black">Preço Base</p>
+                                <p class="text-[18px] font-bold">R$ {{service.precoBase | number:'1.2-2'}}</p>
+                            </div>
+                            <div class="flex flex-col justify-center text-center items-center gap-2">
+                                <p class="font-black">Status</p>
+                                <label class="inline-flex items-center gap-3 w-full justify-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" 
+                                        [checked]="service.ativo"
+                                        (click)="openConfirmStatusModal(service.id, !service.ativo); $event.preventDefault()" />
+                                    <div
+                                        class="relative w-9 h-5 bg-neutral-quaternary rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    }
+
+                </div>
+            </div>
         </div>
         <span class="w-[95%] h-0.5 bg-gray-300 mt-3"></span>
     </section>
@@ -112,4 +149,10 @@
 }
 @if(createServiceModalOpen) {
 <app-create-service-modal (closeModal)="createServiceModalOpen = false"></app-create-service-modal>
+}
+@if(confirmStatusModalOpen) {
+<app-confirm-action-modal 
+    [message]="'Tem certeza que deseja ' + (pendingServiceStatus ? 'ativar' : 'desativar') + ' este serviço?'"
+    (confirmAction)="confirmUpdateServiceStatus()"
+    (closeModal)="cancelUpdateServiceStatus()"></app-confirm-action-modal>
 }

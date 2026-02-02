@@ -2,17 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
-export interface ServiceType {
-  id: string;
-  titulo: string;
-  descricao: string;
-  precoBase: number;
-  ativo: boolean;
-  criadoEm?: Date;
-  atualizadoEm?: Date;
-}
 
-export interface Service {
+export interface ServiceRequest {
   id: string;
   status: string;
   descricao?: string;
@@ -32,7 +23,7 @@ export interface Service {
   pagoEm?: Date;
 }
 
-@Injectable({
+  @Injectable({
   providedIn: 'root',
 })
 export class Client {
@@ -40,14 +31,12 @@ export class Client {
   constructor(private http: HttpClient) { }
 
   getClientServices() {
-    return this.http.get<Service[]>(`${this.API_URL}/service-requests`);
+    return this.http.get<ServiceRequest[]>(`${this.API_URL}/service-requests`);
   }
 
   createServiceRequest(data: any) {
     return this.http.post(`${this.API_URL}/service-requests`, data);
   }
 
-  getActiveServices() {
-    return this.http.get<ServiceType[]>(`${this.API_URL}/services/active`);
-  }
+ 
 }

@@ -5,10 +5,13 @@ import { CommonModule } from '@angular/common';
 import { TransactionModal } from './components/transaction-modal/transaction-modal';
 import { ButtonGreen } from '../../shared/components/button-green/button-green';
 import { CreateServiceModal } from './components/create-service-modal/create-service-modal';
+import { Services, ServiceType } from '../../services/services/services';
+import { CustomInput } from '../../shared/components/custom-input/custom-input';
+import { ConfirmActionModal } from '../../shared/components/confirm-action-modal/confirm-action-modal';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [Header, CommonModule, TransactionModal, ButtonGreen, CreateServiceModal],
+  imports: [Header, CommonModule, TransactionModal, ButtonGreen, CreateServiceModal, ConfirmActionModal],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
@@ -26,13 +29,20 @@ export class AdminDashboard implements OnInit {
   transactionModalOpen: boolean = false;
   transactionDetails: TransactionDetails | null = null;
 
+  allServices: ServiceType[] = [];
+
   createServiceModalOpen: boolean = false;
 
-  constructor(private adminService: Admin, private cdr: ChangeDetectorRef) { }
+  confirmStatusModalOpen: boolean = false;
+  pendingServiceId: string = '';
+  pendingServiceStatus: boolean = false;
+
+  constructor(private adminService: Admin, private servicesService: Services, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getProvidersToApprove();
     this.getAllTransactions();
+    this.getAllServices();
   }
 
   getProvidersToApprove() {
@@ -116,5 +126,49 @@ export class AdminDashboard implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  getAllServices() {
+    this.servicesService.getAllServices().subscribe({
+      next: (services) => {
+        console.log('Serviços:', services);
+        this.allServices = services;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Erro ao buscar serviços:', error);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  openConfirmStatusModal(serviceId: string, isActive: boolean) {
+    this.pendingServiceId = serviceId;
+    this.pendingServiceStatus = isActive;
+    this.confirmStatusModalOpen = true;
+  }
+
+  confirmUpdateServiceStatus() {
+    this.servicesService.updateServiceStatus(this.pendingServiceId, this.pendingServiceStatus).subscribe({
+      next: () => {
+        console.log(`Status do serviço com ID ${this.pendingServiceId} atualizado para ${this.pendingServiceStatus ? 'ativo' : 'inativo'}.`);
+        const service = this.allServices.find(s => s.id === this.pendingServiceId);
+        if (service) {
+          service.ativo = this.pendingServiceStatus;
+        }
+        this.confirmStatusModalOpen = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error(`Erro ao atualizar o status do serviço:`, error);
+        this.confirmStatusModalOpen = false;
+      }
+    });
+  }
+
+  cancelUpdateServiceStatus() {
+    this.confirmStatusModalOpen = false;
+    // Força a atualização do checkbox para o estado original
+    this.cdr.detectChanges();
   }
 }

@@ -21,7 +21,15 @@ export class Services {
   private readonly API_URL = environment.apiUrl;
   constructor(private http: HttpClient) { }
   
+  getAllServices() {
+    return this.http.get<ServiceType[]>(`${this.API_URL}/services`);
+  }
+
   getActiveServices() {
     return this.http.get<ServiceType[]>(`${this.API_URL}/services/active`);
+  }
+
+  updateServiceStatus(serviceId: string, isActive: boolean) {
+    return this.http.patch(`${this.API_URL}/services/${serviceId}/toggle-status`, { ativo: isActive });
   }
 }

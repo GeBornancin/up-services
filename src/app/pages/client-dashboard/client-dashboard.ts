@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { delay } from 'rxjs';
-import { Client, Service } from '../../services/client/client';
+import { Client, ServiceRequest } from '../../services/client/client';
 import { Header } from '../../shared/components/header/header';
 import { Address, Auth } from '../../services/auth/auth';
 import { DecimalPipe } from '@angular/common';
@@ -16,9 +16,9 @@ import { ServiceRequestModal } from "./components/service-request-modal/service-
 export class ClientDashboard implements OnInit {
   constructor(private clientService: Client, private cdr: ChangeDetectorRef, private authService: Auth) { }
 
-  allServices: Service[] = [];
-  activeServices: Service[] = [];
-  completedServices: Service[] = [];
+  allServices: ServiceRequest[] = [];
+  activeServices: ServiceRequest[] = [];
+  completedServices: ServiceRequest[] = [];
   activeServiceCount: number = 0;
   pendingServiceCount: number = 0;
   inProgressServiceCount: number = 0;

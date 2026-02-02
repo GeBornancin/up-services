@@ -1,14 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-button-green',
-  standalone: true, // Garanta que é standalone
-  imports: [CommonModule],
-  templateUrl: './button-green.html',
-  styleUrl: './button-green.css', // Se houver
+  selector: 'app-button-red',
+  imports: [],
+  templateUrl: './button-red.html',
+  styleUrl: './button-red.css',
 })
-export class ButtonGreen {
+export class ButtonRed {
   // Recebe o texto que vai escrito no botão
   @Input() text: string = 'Enviar';
 
